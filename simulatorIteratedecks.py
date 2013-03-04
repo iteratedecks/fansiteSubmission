@@ -21,30 +21,14 @@ class SimulatorIteratedecks(FansiteSimulator):
         iterateDecksRegex = re.compile(iterateDecksRegex)
         simResults = iterateDecksRegex.match(results).groups()
 
-        battlesWon = simResults[0]
-        battlesTotal = simResults[1]
-        anp = simResults[4]
+        results = {}
+        results["wins"] = simResults[0]
+        results["total"] = simResults[1]
+        results["losses"] = simResults[2]
+        results["draws"] = simResults[3]
+        results["anp"] = simResults[4]
 
-        print(" ... result was: " + battlesWon + "/" + battlesTotal)
-        return [battlesWon, battlesTotal, anp]
-
-    def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
-        commandArgs.append(attackingDeck)
-
-    def addRaid(self, commandArgs, raidId):
-        commandArgs.append("-r")
-        commandArgs.append(str(raidId))
-
-    def addMission(self, commandArgs, missionId):
-        commandArgs.append("-m")
-        commandArgs.append(str(missionId))
-
-    def addQuest(self, commandArgs, questId):
-        commandArgs.append("-Q")
-        commandArgs.append(str(questId))
-
-    def addCustom(self, commandArgs, custom):
-        commandArgs.append(custom)
+        return results
 
     def addAchievement(self, commandArgs, achievementId, missionId):
         commandArgs.append("-a")
@@ -52,13 +36,35 @@ class SimulatorIteratedecks(FansiteSimulator):
         commandArgs.append("-m")
         commandArgs.append(str(missionId))
 
-    def addOrdered(self, commandArgs):
-        commandArgs.append("-o")
+    def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
+        commandArgs.append(attackingDeck)
 
-    def addSurge(self, commandArgs):
-        commandArgs.append("-s")
+    def addCustom(self, commandArgs, custom):
+        commandArgs.append(custom)
+
+    def addExactOrdered(self, commandArgs):
+        addOrdered(commandArgs)
+
+    def addMission(self, commandArgs, missionId):
+        commandArgs.append("-m")
+        commandArgs.append(str(missionId))
 
     def addNumSims(self, commandArgs, n):
         commandArgs.append("-n")
         commandArgs.append(str(n))
         commandArgs.append("--seed")
+
+    def addOrdered(self, commandArgs):
+        commandArgs.append("-o")
+
+    def addQuest(self, commandArgs, questId):
+        commandArgs.append("-Q")
+        commandArgs.append(str(questId))
+
+    def addRaid(self, commandArgs, raidId):
+        commandArgs.append("-r")
+        commandArgs.append(str(raidId))
+
+    def addSurge(self, commandArgs):
+        commandArgs.append("-s")
+

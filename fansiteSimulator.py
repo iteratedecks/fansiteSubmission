@@ -23,7 +23,11 @@ class FansiteSimulator(object):
         type = deck["type"]
 
         commandArgs = [self.executable]
-        self.addAttackingDeck(commandArgs, deck["attackingDeck"], deck["attackingDeckCards"])
+        attackingDeckCards = None
+        if("attackingDeckCards" in deck):
+            attackingDeckCards = deck["attackingDeckCards"]
+
+        self.addAttackingDeck(commandArgs, deck["attackingDeck"], attackingDeckCards)
 
         if(type == "raid"):
             self.addRaid(commandArgs, deck["raidId"])
@@ -35,8 +39,7 @@ class FansiteSimulator(object):
             self.addQuest(commandArgs, deck["questId"])
 
         elif(type == "custom"):
-            self.addCustom(deck["customHash"])
-            commandArgs.append(commandArgs, str(deck["customHash"]))
+            self.addCustom(commandArgs, deck["defendingDeck"])
 
         elif(type == "ach"):
             self.addAchievement(commandArgs, deck["achId"], deck["missionId"])
@@ -45,13 +48,15 @@ class FansiteSimulator(object):
             print("unknown deck type: " + type)
             return
 
-        if(deck["isOrdered"]):
+        if("isExactedOrdered" in deck and deck["isExactedOrdered"]):
+            self.addExactOrdered(commandArgs)
+        elif("isOrdered" in deck and deck["isOrdered"]):
             self.addOrdered(commandArgs)
 
-        if(deck["isSurge"]):
+        if("isSurge" in deck and deck["isSurge"]):
             self.addSurge(commandArgs)
 
-        if(deck["isDelayed"]):
+        if("isDelayed" in deck and deck["isDelayed"]):
             self.addDelayed(commandArgs)
 
         self.addNumSims(commandArgs, numSims)
@@ -66,32 +71,35 @@ class FansiteSimulator(object):
     def loadVersion(self):
         raise NotImplementedError
 
+    def addAchievement(self, commandArgs, achievementId, missionId):
+        raise NotImplementedError
+
     def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
-        raise NotImplementedError
-
-    def addRaid(self, commandArgs, raidId):
-        raise NotImplementedError
-
-    def addMission(self, commandArgs, missionId):
-        raise NotImplementedError
-
-    def addQuest(self, commandArgs, questId):
         raise NotImplementedError
 
     def addCustom(self, commandArgs, custom):
         raise NotImplementedError
 
-    def addAchievement(self, commandArgs, achievementId, missionId):
+    def addDelayed(self, commandArgs):
+        raise NotImplementedError
+
+    def addExactOrdered(self, commandArgs):
+        raise NotImplementedError
+
+    def addMission(self, commandArgs, missionId):
+        raise NotImplementedError
+
+    def addNumSims(self, commandArgs, n):
         raise NotImplementedError
 
     def addOrdered(self, commandArgs):
         raise NotImplementedError
 
+    def addQuest(self, commandArgs, questId):
+        raise NotImplementedError
+
+    def addRaid(self, commandArgs, raidId):
+        raise NotImplementedError
+
     def addSurge(self, commandArgs):
-        raise NotImplementedError
-
-    def addDelayed(self, commandArgs):
-        raise NotImplementedError
-
-    def addNumSims(self, commandArgs, n):
         raise NotImplementedError
