@@ -25,8 +25,6 @@ def getCheck(dataDirectory = ""):
 def updateDataFiles(source = "kg.tyrantonline.com", dataDirectory = "", files = ["achievements", "cards", "missions", "quests", "raids"]):
     print("Getting data from " + source)
 
-    files = ["achievements"]
-
     for file in files:
 
         fileSource = "/assets/" + file + ".xml"
