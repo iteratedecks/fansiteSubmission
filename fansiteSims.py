@@ -9,12 +9,27 @@ import time
 from fansiteSimulator import FansiteSimulator
 import fansiteConfig
 import fansiteHttp
+import testRepo
 import tyrantData
 
 def askToUpdateDataFiles():
     input_var = raw_input("Would you like to download the latest Tyrant xml files (y/n)? ")
     if(input_var == "Y" or input_var == "y"):
         tyrantData.updateDataFiles()
+
+def startSession(token, version, check = None):
+    if(check is None):
+        check = tyrantData.getCheck()
+    json_data = fansiteHttp.getSession(token, version, check)
+
+    # TODO this is a bit of a hack
+    if("errorCode" in json_data and json_data["errorCode"] >= 101 and json_data["errorCode"] <= 110):
+        askToUpdateFiles()
+
+    if(not "sessId" in json_data):
+        return None
+
+    return json_data["sessId"]
 
 def loadSimulators():
     simulators = {}
@@ -25,9 +40,20 @@ def loadSimulators():
 
     return simulators
 
-def fansiteTest():
-    args = fansiteConfig.getArgs()
+def simDeck(simulator, deck, num):
+    deckId = deck["deckId"]
 
+    start = time.time()
+    results = simulator.simulate(deck, num)
+    timeTaken = int(time.time() - start)
+    results["time"] = timeTaken
+
+    return results
+
+def fansiteTest():
+    testMode = False
+
+    args = fansiteConfig.getArgs()
     simulators = loadSimulators()
 
     simulator = None
@@ -41,37 +67,37 @@ def fansiteTest():
     num = args["numSims"]
     version = simulator.getVersion()
 
+    if(testMode):
+        num = 1000
+
     print("Using " + simulator.name + " version " + version + " with " + str(num) + " sims per deck")
-    print("Requesting session id...")
 
-    check = tyrantData.getCheck()
-
-    json_data = fansiteHttp.getSession(token, version, check)
-
-    # TODO this is a bit of a hack
-    if("errorCode" in json_data and json_data["errorCode"] >= 101 and json_data["errorCode"] <= 110):
-        askToUpdateFiles()
-
-    if(not "sessId" in json_data):
-        print("No session started.")
-        return
-
-    sessId = json_data["sessId"]
-    print(" ... started session with id " + sessId)
+    if(not testMode):
+        print("Requesting session id...")
+        sessId = startSession(token, version)
+        if(sessId is None):
+            print("No session started.")
+            return
+        print(" ... started session with id " + sessId)
 
     print("Getting decks...")
-    json_data = fansiteHttp.getDecks(sessId)
-    decks = json_data["decks"]
+    if(not testMode):
+        json_data = fansiteHttp.getDecks(sessId)
+        decks = json_data["decks"]
+    else:
+        decks = testRepo.loadTests(True)
     print(" ... " + str(len(decks)) + " decks retrieved")
 
     for deck in decks:
         deckId = deck["deckId"]
-
-        start = time.time()
-        [battlesWon, battlesTotal, anp] = simulator.simulate(deck, num)
-        timeTaken = int(time.time() - start)
-
-        json_data = fansiteHttp.submitSimulation(deckId, sessId, battlesTotal, battlesWon, timeTaken, anp)
+        results = simDeck(simulator, deck, num)
+        if(not testMode):
+            print(" ... result was: " + results["wins"] + "/" + results["total"])
+            json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
+        else:
+            testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
+            testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
+            testRepo.testKey(deck, "lossrate", 100 * int(results["wins"]) / int(results["total"]))
 
 if __name__ == '__main__':
     fansiteTest()
