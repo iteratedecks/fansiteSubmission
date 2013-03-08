@@ -48,6 +48,9 @@ class FansiteSimulator(object):
             print("unknown deck type: " + type)
             return
 
+        if("battlegroundId" in deck):
+            self.addBattlegroundId(commandArgs, deck["battlegroundId"])
+
         if("isExactedOrdered" in deck and deck["isExactedOrdered"]):
             self.addExactOrdered(commandArgs)
         elif("isOrdered" in deck and deck["isOrdered"]):
@@ -75,6 +78,9 @@ class FansiteSimulator(object):
         raise NotImplementedError
 
     def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
+        raise NotImplementedError
+
+    def addBattlegroundId(self, commandArgs, battlegroundId):
         raise NotImplementedError
 
     def addCustom(self, commandArgs, custom):

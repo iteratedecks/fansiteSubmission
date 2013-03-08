@@ -8,7 +8,6 @@ class SimulatorIteratedecks(FansiteSimulator):
     executable = "iteratedecks-cli.exe"
 
     def loadVersion(self):
-        return "worldship"
         commandArgs = [SimulatorIteratedecks.executable, "--version"]
         result = subprocess.check_output(commandArgs)
         return result.split()[2]
@@ -39,11 +38,12 @@ class SimulatorIteratedecks(FansiteSimulator):
     def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
         commandArgs.append(attackingDeck)
 
+    def addBattlegroundId(self, commandArgs, battlegroundId):
+        commandArgs.append("-b")
+        commandArgs.append(str(battlegroundId))
+
     def addCustom(self, commandArgs, custom):
         commandArgs.append(custom)
-
-    def addExactOrdered(self, commandArgs):
-        addOrdered(commandArgs)
 
     def addMission(self, commandArgs, missionId):
         commandArgs.append("-m")
