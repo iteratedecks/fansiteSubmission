@@ -51,7 +51,7 @@ def loadSimulators():
     return simulators
 
 def printTestFailure(expected, actual, key, comment):
-    print("TEST FAILED: " + comment)
+    print("TEST FAILED on " + key + " (" + str(expected) + " vs. " + str(actual) + "): " + comment)
 
 def testKey(deck, key, actual):
     testThreshold = 10
