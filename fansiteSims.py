@@ -106,5 +106,5 @@ def fansiteTest():
             traceback.print_exception(ex, val, tb)
 
 if __name__ == '__main__':
-    while(True):
-        fansiteTest()
+    #while(True):
+    fansiteTest()
