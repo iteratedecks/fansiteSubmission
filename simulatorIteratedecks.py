@@ -29,11 +29,11 @@ class SimulatorIteratedecks(FansiteSimulator):
 
         return results
 
-    def addAchievement(self, commandArgs, achievementId, missionId):
-        commandArgs.append("-a")
-        commandArgs.append(str(achievementId))
-        commandArgs.append("-m")
-        commandArgs.append(str(missionId))
+    #def addAchievement(self, commandArgs, achievementId, missionId):
+    #    commandArgs.append("-a")
+    #    commandArgs.append(str(achievementId))
+    #    commandArgs.append("-m")
+    #    commandArgs.append(str(missionId))
 
     def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
         commandArgs.append(attackingDeck)
