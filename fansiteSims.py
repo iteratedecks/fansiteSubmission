@@ -4,7 +4,9 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
+import traceback
 
 from fansiteSimulator import FansiteSimulator
 import fansiteConfig
@@ -51,28 +53,26 @@ def simDeck(simulator, deck, num):
     return results
 
 def fansiteTest():
-    testMode = False
-
     args = fansiteConfig.getArgs()
     simulators = loadSimulators()
 
     simulator = None
-    if(args["simulator"] in simulators):
-        simulator = simulators[args["simulator"]]()
+    if(args.simulator in simulators):
+        simulator = simulators[args.simulator]()
     else:
-        print("Unsupported simulator: " + args["simulator"])
+        print("Unsupported simulator: " + args.simulator)
         return
 
-    token = args["token"]
-    num = args["numSims"]
+    token = args.token
+    num = args.numSims
     version = simulator.getVersion()
 
-    if(testMode):
+    if(args.test):
         num = 1000
 
     print("Using " + simulator.name + " version " + version + " with " + str(num) + " sims per deck")
 
-    if(not testMode):
+    if(not args.test):
         print("Requesting session id...")
         sessId = startSession(token, version)
         if(sessId is None):
@@ -81,7 +81,7 @@ def fansiteTest():
         print(" ... started session with id " + sessId)
 
     print("Getting decks...")
-    if(not testMode):
+    if(not args.test):
         json_data = fansiteHttp.getDecks(sessId)
         decks = json_data["decks"]
     else:
@@ -90,14 +90,21 @@ def fansiteTest():
 
     for deck in decks:
         deckId = deck["deckId"]
-        results = simDeck(simulator, deck, num)
-        if(not testMode):
-            print(" ... result was: " + results["wins"] + "/" + results["total"])
-            json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
-        else:
-            testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
-            testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
-            testRepo.testKey(deck, "lossrate", 100 * int(results["wins"]) / int(results["total"]))
+
+        try:
+            results = simDeck(simulator, deck, num)
+
+            if(not args.test):
+                print(" ... result was: " + results["wins"] + "/" + results["total"])
+                json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
+            else:
+                testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
+                testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
+                testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
+        except NotImplementedError, Argument:
+            ex, val, tb = sys.exc_info()
+            traceback.print_exception(ex, val, tb)
 
 if __name__ == '__main__':
-    fansiteTest()
+    while(True):
+        fansiteTest()
