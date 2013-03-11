@@ -8,8 +8,11 @@ from fansiteSimulator import FansiteSimulator
 class SimulatorTyrantOptimizer(FansiteSimulator):
     name = "Tyrant Optimizer"
     executable = "tyrant_optimize.exe"
-    results_regex = re.compile(r"win%: [.\d]+ \((\d+) out of (\d+)\)\D+ANP: ([\d.]+)")
-    results_keys = ["wins", "total", "anp"]
+    results_regex = re.compile(r"win%: [.\d]+ \((\d+) out of (\d+)\)"
+        r"\s+draw%: [.\d]+ \((\d+) out of \d+\)"
+        r"\s+loss%: [.\d]+ \((\d+) out of \d+\)"
+        r"\s+ANP: ([\d.]+)")
+    results_keys = ["wins", "total", "draws", "losses", "anp"]
 
     def loadVersion(self):
         commandArgs = [self.executable, "-version"]
@@ -37,7 +40,7 @@ class SimulatorTyrantOptimizer(FansiteSimulator):
 
     def addExtraArgs(self, commandArgs, args):
         commandArgs.extend(["-t", str(getattr(args, "numThreads", 1))])
-        commandArgs.extend(["sim", args.numSims])
+        commandArgs.extend(["sim", str(args.numSims)])
 
     def addMission(self, commandArgs, missionId):
         commandArgs.append("Mission #%s" % missionId)

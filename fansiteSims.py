@@ -104,8 +104,10 @@ def fansiteTest():
                     json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
                 else:
                     testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
-                    testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
-                    testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
+                    if "draws" in results:
+                        testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
+                    if "losses" in results:
+                        testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
             except NotImplementedError, e:
                 print("Error: Not Implemented: %s" % e)
             except Exception, e:
