@@ -25,11 +25,10 @@ def loadTests(forceUpdate = False, dataDirectory = "", filename = "tests.json", 
     data = None
     if(not forceUpdate):
         fileDest = os.path.join(dataDirectory, filename)
-        with open(fileDest, 'rb') as f:
-            contents = f.read()
-        if(data is None):
-            forceUpdate = True
-    if(forceUpdate):
+        if(os.path.exists(fileDest)):
+            with open(fileDest, 'rb') as f:
+                data = f.read()
+    if(data is None):
         data = updateTests(dataDirectory, filename, host, path)
     json_data = json.loads(data)
     decks = json_data["decks"]

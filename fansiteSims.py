@@ -90,7 +90,7 @@ def fansiteTest():
             json_data = fansiteHttp.getDecks(sessId, args.limit)
             decks = json_data["decks"]
         else:
-            decks = testRepo.loadTests(True)
+            decks = testRepo.loadTests(False)
         print(" ... " + str(len(decks)) + " decks retrieved")
 
         for deck in decks:
