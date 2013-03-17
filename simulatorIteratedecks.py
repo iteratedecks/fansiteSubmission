@@ -45,14 +45,13 @@ class SimulatorIteratedecks(FansiteSimulator):
     def addCustom(self, commandArgs, custom):
         commandArgs.append(custom)
 
+    def addExtraArgs(self, commandArgs, args):
+        commandArgs.extend(["-n", str(args.numSims)])
+        commandArgs.append("--seed")
+
     def addMission(self, commandArgs, missionId):
         commandArgs.append("-m")
         commandArgs.append(str(missionId))
-
-    def addNumSims(self, commandArgs, n):
-        commandArgs.append("-n")
-        commandArgs.append(str(n))
-        commandArgs.append("--seed")
 
     def addOrdered(self, commandArgs):
         commandArgs.append("-o")

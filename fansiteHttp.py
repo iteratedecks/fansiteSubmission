@@ -15,12 +15,9 @@ def doRequest(path, data):
 
     requestData = json.dumps(data)
 
-    #http = httplib.HTTPConnection(fansiteUrl, 80, timeout=10)
-    #http.request("POST", path, requestData)#, headers)
     request = urllib2.Request(url='http://' + fansiteUrl + path, data=requestData)
     resp = urllib2.urlopen(request)
 
-    #resp = http.getresponse()
     return json.loads(resp.read())
 
 def handleGenericErrors(code):
@@ -53,8 +50,8 @@ def getDecksRequestData(sessId, limit = None):
     requestData = {}
     requestData["sessId"] = sessId
 
-    if(not limit is None):
-        requestData["limit"] = check
+    if limit is not None:
+        requestData["limit"] = int(limit)
 
     return [path, requestData]
 

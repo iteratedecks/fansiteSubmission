@@ -18,7 +18,7 @@ class FansiteSimulator(object):
             self.version = self.loadVersion()
         return self.version
 
-    def simulate(self, deck, numSims):
+    def simulate(self, deck, args):
         playerHash = deck["attackingDeck"]
         type = deck["type"]
 
@@ -62,50 +62,51 @@ class FansiteSimulator(object):
         if("isDelayed" in deck and deck["isDelayed"]):
             self.addDelayed(commandArgs)
 
-        self.addNumSims(commandArgs, numSims)
+        self.addExtraArgs(commandArgs, args)
 
-        print("Running " + " ".join(commandArgs))
+        print("Running " + " ".join('"%s"' % arg if " " in arg else arg for arg in commandArgs))
         result = subprocess.check_output(commandArgs)
         return self.processResults(result)
 
     def processResults(self, results):
-        raise NotImplementedError
+        raise NotImplementedError, "Process Results from Output"
 
     def loadVersion(self):
-        raise NotImplementedError
+        raise NotImplementedError, "Version"
 
     def addAchievement(self, commandArgs, achievementId, missionId):
-        raise NotImplementedError
+        raise NotImplementedError, "Achievement"
 
     def addAttackingDeck(self, commandArgs, attackingDeck, attackingDeckCards):
-        raise NotImplementedError
+        raise NotImplementedError, "Attacking Deck"
 
     def addBattlegroundId(self, commandArgs, battlegroundId):
-        raise NotImplementedError
+        raise NotImplementedError, "Battlegroud Effect"
 
     def addCustom(self, commandArgs, custom):
-        raise NotImplementedError
+        raise NotImplementedError, "Custom Deck"
 
     def addDelayed(self, commandArgs):
-        raise NotImplementedError
+        raise NotImplementedError, "Delayed (tournament mode)"
 
     def addExactOrdered(self, commandArgs):
-        raise NotImplementedError
+        raise NotImplementedError, "Exact Order (ignore 3-card hand rule)"
+
+    def addExtraArgs(self, commandArgs, args):
+        pass
 
     def addMission(self, commandArgs, missionId):
-        raise NotImplementedError
-
-    def addNumSims(self, commandArgs, n):
-        raise NotImplementedError
+        raise NotImplementedError, "Mission Deck"
 
     def addOrdered(self, commandArgs):
-        raise NotImplementedError
+        raise NotImplementedError, "Ordered Deck (honor 3-card hand rule)"
 
     def addQuest(self, commandArgs, questId):
-        raise NotImplementedError
+        raise NotImplementedError, "Quest Deck"
 
     def addRaid(self, commandArgs, raidId):
-        raise NotImplementedError
+        raise NotImplementedError, "Raid Deck"
 
     def addSurge(self, commandArgs):
-        raise NotImplementedError
+        raise NotImplementedError, "Surge"
+

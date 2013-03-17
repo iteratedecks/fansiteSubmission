@@ -26,7 +26,7 @@ def startSession(token, version, check = None):
 
     # TODO this is a bit of a hack
     if("errorCode" in json_data and json_data["errorCode"] >= 101 and json_data["errorCode"] <= 110):
-        askToUpdateFiles()
+        askToUpdateDataFiles()
 
     if(not "sessId" in json_data):
         return None
@@ -39,21 +39,26 @@ def loadSimulators():
     # add extra simulators here. don't forget to import any files you need
     from simulatorIteratedecks import SimulatorIteratedecks
     simulators[SimulatorIteratedecks.name] = SimulatorIteratedecks
+    from simulatorTyrantOptimizer import SimulatorTyrantOptimizer
+    simulators[SimulatorTyrantOptimizer.name] = SimulatorTyrantOptimizer
 
     return simulators
 
-def simDeck(simulator, deck, num):
+def simDeck(simulator, deck, args):
     deckId = deck["deckId"]
 
     start = time.time()
-    results = simulator.simulate(deck, num)
+    results = simulator.simulate(deck, args)
+    if results is None:
+        return
     timeTaken = int(time.time() - start)
-    results["time"] = timeTaken
+    results["time"] = max(1, timeTaken)
 
     return results
 
 def fansiteTest():
     args = fansiteConfig.getArgs()
+    print args
     simulators = loadSimulators()
 
     simulator = None
@@ -63,48 +68,52 @@ def fansiteTest():
         print("Unsupported simulator: " + args.simulator)
         return
 
-    token = args.token
-    num = args.numSims
     version = simulator.getVersion()
 
     if(args.test):
-        num = 1000
+        args.numSims = 1000
+        args.runForever = 0
 
-    print("Using " + simulator.name + " version " + version + " with " + str(num) + " sims per deck")
+    print("Using %s version %s with %s sims per deck" % (simulator.name, version, args.numSims))
 
     if(not args.test):
         print("Requesting session id...")
-        sessId = startSession(token, version)
+        sessId = startSession(args.token, version)
         if(sessId is None):
             print("No session started.")
             return
         print(" ... started session with id " + sessId)
 
-    print("Getting decks...")
-    if(not args.test):
-        json_data = fansiteHttp.getDecks(sessId)
-        decks = json_data["decks"]
-    else:
-        decks = testRepo.loadTests(True)
-    print(" ... " + str(len(decks)) + " decks retrieved")
+    while 1:
+        print("Getting decks...")
+        if(not args.test):
+            json_data = fansiteHttp.getDecks(sessId, args.limit)
+            decks = json_data["decks"]
+        else:
+            decks = testRepo.loadTests(False)
+        print(" ... " + str(len(decks)) + " decks retrieved")
 
-    for deck in decks:
-        deckId = deck["deckId"]
-
-        try:
-            results = simDeck(simulator, deck, num)
-
-            if(not args.test):
-                print(" ... result was: " + results["wins"] + "/" + results["total"])
-                json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
-            else:
-                testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
-                testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
-                testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
-        except NotImplementedError, Argument:
-            ex, val, tb = sys.exc_info()
-            traceback.print_exception(ex, val, tb)
+        for deck in decks:
+            deckId = deck["deckId"]
+            try:
+                results = simDeck(simulator, deck, args)
+                if results is None:
+                    print(" ... no result, skipped")
+                if not args.test:
+                    print(" ... result: %(wins)s/%(total)s, anp=%(anp)s, time=%(time)s" % results)
+                    json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
+                else:
+                    testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
+                    if "draws" in results:
+                        testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
+                    if "losses" in results:
+                        testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
+            except NotImplementedError, e:
+                print("Error: Not Implemented: %s" % e)
+            except Exception, e:
+                traceback.print_exc()
+        if not args.runForever:
+            break
 
 if __name__ == '__main__':
-    #while(True):
     fansiteTest()

@@ -4,31 +4,21 @@ import os
 
 def getCheck(dataDirectory = ""):
     check = {}
-
     files = ["achievements", "cards", "missions", "quests", "raids"]
-
-    for file in files:
-        path = dataDirectory + file + ".xml"
-        hash = None
-        if(os.path.exists(path)):
-            contents = None
-            f = None
-            try:
-                f = open(path, 'rb')
+    for filename in files:
+        path = os.path.join(dataDirectory, filename + ".xml")
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
                 contents = f.read()
-            finally:
-                f.close()
-            hash = hashlib.md5(contents).hexdigest()
-            check[file] = hash
+            md5hash = hashlib.md5(contents).hexdigest()
+            check[filename] = md5hash
     return check
 
 def updateDataFiles(source = "kg.tyrantonline.com", dataDirectory = "", files = ["achievements", "cards", "missions", "quests", "raids"]):
     print("Getting data from " + source)
-
-    for file in files:
-
-        fileSource = "/assets/" + file + ".xml"
-        fileDest = dataDirectory + file + ".xml"
+    for filename in files:
+        fileSource = "/assets/" + filename + ".xml"
+        fileDest = dataDirectory + filename + ".xml"
         http = httplib.HTTPConnection(source, 80, timeout=10)
         http.request("GET", fileSource)
 
