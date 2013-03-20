@@ -9,14 +9,19 @@ Python wrapper for Tyrant Fansite deck simulation and submission
 * Download the latest version of your favorite simulator
  * iteratedecks from http://www.hunterthinks.com/id/
  * Tyrant Optimize from http://www.hunterthinks.com/to/
-* Download the fansiteSubmission source from https://nodeload.github.com/andor9/fansiteSubmission/zip/master
-* Put the fansiteSubmission folder inside of the tyrant_optimize folder
+* Download the fansiteSubmission source from https://nodeload.github.com/iteratedecks/fansiteSubmission/zip/master
+* Put the fansiteSubmission folder inside of the correct folder, usually iteratedecks or tyrant_optimize
 
-## Running for the first time
+## Configuring fansiteSubmission for the first time
 
 * Open a command prompt (Start -> Cmd)
 * cd into your simulator's folder
-* Call "fansiteSubmission-master\fansiteSims.py
-* It should create a fansite_config.txt file inside of your simulator's folder
-* Open this file and add your simulator token
-* Run fansiteSims.py again and it should automatically connect to the fansite and start simulating decks
+* Call "fansiteSubmission-master\fansiteSims.py" (without the quotes)
+* It will create a fansite_config.txt file inside of your simulator's folder
+* Open fansite_config.txt (located in the simulator folder) and add your simulator token (obtain token from the Fansite, your profile page, settings tab)
+
+## Using fansiteSubmission
+
+* Run fansiteSims.py again and it will automatically connect to the Fansite and start simulating decks
+* To see available options for fansiteSubmission, use "fansiteSims.py -h" (without the quotes)
+* Especially note the option "fansiteSims.py --runForever" to have the simulator run until you hit CTRL+C
