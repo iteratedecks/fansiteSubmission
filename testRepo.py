@@ -24,19 +24,12 @@ def updateTests(dataDirectory = "", filename = "tests.json", host = "haileon.com
 def loadTests(forceUpdate = False, dataDirectory = "", filename = "tests.json", host = "haileon.com", path = "/SimTyrantJS_ListTestCases"):
     data = None
     if(not forceUpdate):
-        fileDest = dataDirectory + filename
-        f = None
-        try:
-            f = open(fileDest, 'rb')
-            contents = f.read()
-        finally:
-            f.close()
-        if(data is None):
-            forceUpdate = True
-
-    if(forceUpdate):
+        fileDest = os.path.join(dataDirectory, filename)
+        if(os.path.exists(fileDest)):
+            with open(fileDest, 'rb') as f:
+                data = f.read()
+    if(data is None):
         data = updateTests(dataDirectory, filename, host, path)
-
     json_data = json.loads(data)
     decks = json_data["decks"]
     return decks
