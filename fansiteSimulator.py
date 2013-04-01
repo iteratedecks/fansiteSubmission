@@ -42,7 +42,11 @@ class FansiteSimulator(object):
             self.addCustom(commandArgs, deck["defendingDeck"])
 
         elif(type == "ach"):
-            self.addAchievement(commandArgs, deck["achId"], deck["missionId"])
+            if("missionId" in deck):
+                self.addAchievement(commandArgs, deck["achId"], deck["missionId"])
+            else:
+                print("Skipping achievement " + str(deck["achId"]) + " because it has no mission id.")
+                return # don't run the simulation
 
         else:
             print("unknown deck type: " + type)
