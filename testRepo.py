@@ -53,12 +53,10 @@ def loadSimulators():
 def printTestFailure(expected, actual, key, comment):
     print("TEST FAILED on " + key + " (" + str(expected) + " vs. " + str(actual) + "): " + comment)
 
-def testKey(deck, key, actual):
-    testThreshold = 10
-
+def testKey(deck, key, actual, threshold = 8):
     if(key in deck):
         expected = deck[key]
         if((expected == 100 or expected == 0) and expected != actual):
             printTestFailure(expected, actual, key, deck["comments"])
-        elif((expected + testThreshold) < actual or (expected - testThreshold) > actual):
+        elif((expected + threshold) < actual or (expected - threshold) > actual):
             printTestFailure(expected, actual, key, deck["comments"])

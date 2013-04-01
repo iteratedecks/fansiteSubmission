@@ -26,7 +26,7 @@ def startSession(token, version, check = None):
 
     # TODO this is a bit of a hack
     if("errorCode" in json_data and json_data["errorCode"] >= 101 and json_data["errorCode"] <= 110):
-        askToUpdateFiles()
+        askToUpdateDataFiles()
 
     if(not "sessId" in json_data):
         return None
@@ -101,6 +101,7 @@ def fansiteTest():
                 testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
                 testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
                 testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
+                testRepo.testKey(deck, "anp", float(results["anp"]), 5)
         except NotImplementedError, Argument:
             ex, val, tb = sys.exc_info()
             traceback.print_exception(ex, val, tb)
