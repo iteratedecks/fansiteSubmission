@@ -18,7 +18,9 @@ Python wrapper for Tyrant Fansite deck simulation and submission
 * cd into your simulator's folder
 * Call "fansiteSubmission-master\fansiteSims.py" (without the quotes)
 * It will create a fansite_config.txt file inside of your simulator's folder
-* Open fansite_config.txt (located in the simulator folder) and add your simulator token (obtain token from the Fansite, your profile page, settings tab)
+* Open fansite_config.txt (located in the simulator folder) and:
+  * Edit the simulator paramter to match the simulator you will be using (e.g. "iteratedecks")
+  * Add your simulator token (obtain token from the Fansite, your profile page, settings tab)
 
 ## Using fansiteSubmission
 
