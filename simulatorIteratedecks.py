@@ -1,11 +1,17 @@
 import re
 import subprocess
+import os
 
 from fansiteSimulator import FansiteSimulator
 
 class SimulatorIteratedecks(FansiteSimulator):
     name = "iteratedecks"
-    executable = "iteratedecks-cli.exe"
+
+    # Bugfix: On posix the simulator is called without .exe
+    if os.name == "posix":
+        executable = "./iteratedecks-cli"
+    else:
+        executable = "iteratedecks-cli.exe"
 
     def loadVersion(self):
         commandArgs = [SimulatorIteratedecks.executable, "--version"]
