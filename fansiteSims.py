@@ -114,8 +114,10 @@ def fansiteTest():
                         testRepo.testKey(deck, "anp", float(results["anp"]), 5)
             except NotImplementedError, e:
                 print("Error: Not Implemented: %s" % e)
+                break
             except Exception, e:
                 traceback.print_exc()
+                break
         if not args.runForever:
             break
 
