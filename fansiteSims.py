@@ -41,6 +41,8 @@ def loadSimulators():
     simulators[SimulatorIteratedecks.name] = SimulatorIteratedecks
     from simulatorTyrantOptimizer import SimulatorTyrantOptimizer
     simulators[SimulatorTyrantOptimizer.name] = SimulatorTyrantOptimizer
+    from simulatorIteratedecks3 import SimulatorIteratedecks3
+    simulators[SimulatorIteratedecks3.name] = SimulatorIteratedecks3
 
     return simulators
 
