@@ -90,7 +90,7 @@ class SimulatorIteratedecks3(FansiteSimulator):
 
         self.addExtraArgs(commandArgs, args)
 
-        print("Running " + " ".join('"%s"' % arg if " " in arg else arg for arg in commandArgs))
+        #print("Running " + " ".join('"%s"' % arg if " " in arg else arg for arg in commandArgs))
         result = subprocess.check_output(commandArgs)
         return self.processResults(result)
 

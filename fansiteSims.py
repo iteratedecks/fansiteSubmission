@@ -105,21 +105,37 @@ def fansiteTest():
                     print(" ... result: %(wins)s/%(total)s, anp=%(anp)s, time=%(time)s" % results)
                     json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
                 else:
-                    testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"]))
+                    failed = False
+                    if not testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"])):
+                        failed = True
                     if "draws" in results:
-                        testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"]))
+                        if not testRepo.testKey(deck, "drawrate", 100 * int(results["draws"]) / int(results["total"])):
+                            failed = True
                     if "losses" in results:
-                        testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"]))
+                        if not testRepo.testKey(deck, "lossrate", 100 * int(results["losses"]) / int(results["total"])):
+                            failed = True
                     if "anp" in results:
-                        testRepo.testKey(deck, "anp", float(results["anp"]), 5)
+                        if not testRepo.testKey(deck, "anp", float(results["anp"]), 5):
+                            failed = True
+                    if failed:
+                        print "Failed test-case was:"
+                        for key in deck:
+                            print "\t", key, " = ", deck[key]
+                        print ""
+                        if args.oneFailureIsEnough:
+                            return False
             except NotImplementedError, e:
                 print("Error: Not Implemented: %s" % e)
-                break
+                return False
             except Exception, e:
                 traceback.print_exc()
-                break
+                return False
         if not args.runForever:
             break
+    return True
 
 if __name__ == '__main__':
-    fansiteTest()
+    if fansiteTest():
+        sys.exit(0)
+    else:
+        sys.exit(1)

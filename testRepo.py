@@ -53,5 +53,8 @@ def testKey(deck, key, actual, threshold = 8):
         expected = deck[key]
         if((expected == 100 or expected == 0) and expected != actual):
             printTestFailure(expected, actual, key, deck["comments"])
+            return False;
         elif((expected + threshold) < actual or (expected - threshold) > actual):
             printTestFailure(expected, actual, key, deck["comments"])
+            return False;
+    return True;

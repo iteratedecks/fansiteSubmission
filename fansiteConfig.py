@@ -31,6 +31,7 @@ def getCommandArgs():
     argParser.add_argument('--numThreads', help='number of CPU threads for simulation')
     argParser.add_argument('--limit', default=None, help='amount of decks to simulate')
     argParser.add_argument('--runForever', action='store_const', default=0, const=1, help='run forever (Ctrl-Break to stop)')
+    argParser.add_argument('--oneFailureIsEnough', action='store_const', default=0, const=1, help='stop after one test-case failure')
     args = argParser.parse_args()
     return args
 
