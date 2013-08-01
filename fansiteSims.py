@@ -40,9 +40,7 @@ def loadSimulators():
     from simulatorIteratedecks import SimulatorIteratedecks
     simulators[SimulatorIteratedecks.name] = SimulatorIteratedecks
     from simulatorTyrantOptimizer import SimulatorTyrantOptimizer
-    simulators[SimulatorTyrantOptimizer.name] = SimulatorTyrantOptimizer
-    from simulatorIteratedecks3 import SimulatorIteratedecks3
-    simulators[SimulatorIteratedecks3.name] = SimulatorIteratedecks3
+    simulators[SimulatorTyrantOptimizer.name] = SimulatorTyrantOptimizer    
 
     return simulators
 
@@ -76,7 +74,7 @@ def fansiteTest():
         args.numSims = 1000
         args.runForever = 0
 
-    print("Using %s version %s with %s sims per deck" % (simulator.name, version, args.numSims))
+    print("Using '%s' version '%s' with %s sims per deck" % (simulator.name, version, args.numSims))
 
     if(not args.test):
         print("Requesting session id...")

@@ -40,8 +40,6 @@ def loadSimulators():
     # add extra simulators here. don't forget to import any files you need
     from simulatorIteratedecks import SimulatorIteratedecks
     simulators[SimulatorIteratedecks.name] = SimulatorIteratedecks
-    from simulatorIteratedecks3 import SimulatorIteratedecks3
-    simulators[SimulatorIteratedecks3.name] = SimulatorIteratedecks3
 
     return simulators
 
