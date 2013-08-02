@@ -141,8 +141,8 @@ def handleGetSessionErrors(code):
 
 
 # SUBMIT SIMULATION
-def submitSimulation(deckId, sessId, battlesTotal, battlesWon, timeTaken, anp):
-    request = submitSimulationRequestData(deckId, sessId, battlesTotal, battlesWon, timeTaken, anp)
+def submitSimulation(deckId, sessId, battlesTotal, battlesWon, timeTaken, ard):
+    request = submitSimulationRequestData(deckId, sessId, battlesTotal, battlesWon, timeTaken, ard)
     json_data = doRequest(request[0], request[1])
 
     if("errorCode" in json_data):
@@ -150,7 +150,7 @@ def submitSimulation(deckId, sessId, battlesTotal, battlesWon, timeTaken, anp):
 
     return json_data
 
-def submitSimulationRequestData(deckId, sessId, battlesTotal, battlesWon, timeTaken, anp = None):
+def submitSimulationRequestData(deckId, sessId, battlesTotal, battlesWon, timeTaken, ard = None):
     path = "/api/sim/submitSimulation"
 
     requestData = {}
@@ -160,8 +160,8 @@ def submitSimulationRequestData(deckId, sessId, battlesTotal, battlesWon, timeTa
     requestData["battlesWon"] = battlesWon
     requestData["timeTaken"] = timeTaken
 
-    if(not anp is None):
-        requestData["anp"] = anp
+    if(not ard is None):
+        requestData["ard"] = ard
 
     return [path, requestData]
 

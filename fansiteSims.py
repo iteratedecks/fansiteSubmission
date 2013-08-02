@@ -100,8 +100,14 @@ def fansiteTest():
                 if results is None:
                     print(" ... no result, skipped")
                 if not args.test:
-                    print(" ... result: %(wins)s/%(total)s, anp=%(anp)s, time=%(time)s" % results)
-                    json_data = fansiteHttp.submitSimulation(deckId, sessId, results["total"], results["wins"], results["time"], results["anp"])
+                    print(" ... result: %(wins)s/%(total)s, ard=%(ard)s, time=%(time)s" % results)
+                    json_data = fansiteHttp.submitSimulation(deckId
+                                                            ,sessId
+                                                            ,results["total"]
+                                                            ,results["wins"]
+                                                            ,results["time"]
+                                                            ,results["ard"]
+                                                            )
                 else:
                     failed = False
                     if not testRepo.testKey(deck, "winrate", 100 * int(results["wins"]) / int(results["total"])):
