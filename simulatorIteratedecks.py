@@ -20,19 +20,20 @@ class SimulatorIteratedecks(FansiteSimulator):
         return version;
 
     def processResults(self, results):
-        iterateDecksRegex = "\D+(\d+)\D+(\d+)"  # Wins  123 / 200
-        iterateDecksRegex += "\D+(\d+)\D+\d+" # Losses    123 / 200
-        iterateDecksRegex += "\D+(\d+)\D+\d+" # Draws    123 / 200
-        #iterateDecksRegex += "\s+.+ANP=([\d\.]+)" # ANP=25.000
+        iterateDecksRegex = "\D+(\d+)[^\n]*\n"
+        iterateDecksRegex += "\D+(\d+)[^\n]*\n"
+        iterateDecksRegex += "\D+(\d+)[^\n]*\n"
+        iterateDecksRegex += "\D+(\d+)[^\n]*\n"
+        iterateDecksRegex += "\D+(\d+)[^\n]*\n"
         iterateDecksRegex = re.compile(iterateDecksRegex)
         simResults = iterateDecksRegex.match(results).groups()
 
         results = {}
-        results["wins"] = simResults[0]
-        results["total"] = simResults[1]
+        results["wins"] = simResults[1]
+        results["total"] = simResults[0]
         results["losses"] = simResults[2]
         results["draws"] = simResults[3]
-        #results["anp"] = simResults[4]
+        results["ard"] = float(simResults[4]) / float(simResults[0])
 
         return results
 
