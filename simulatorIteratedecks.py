@@ -135,6 +135,7 @@ class SimulatorIteratedecks(FansiteSimulator):
     def addRaid(self, commandArgs, raidId):
         commandArgs.append("--defender")
         commandArgs.append('RAIDID:' + str(raidId))
+        commandArgs.append("--raid-rules true")
 
     def addSurge(self, commandArgs):
         commandArgs.append("--surge")
