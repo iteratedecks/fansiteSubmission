@@ -124,8 +124,8 @@ class SimulatorIteratedecks(FansiteSimulator):
         commandArgs.append('MISSIONID:' + str(missionId))
 
     def addOrdered(self, commandArgs):
-        commandArgs.append("-o")
-        raise "Not supported yet"
+        # that should not happen
+        raise NotImplementedError("Not possible: ordered without a deck.")
 
     def addQuest(self, commandArgs, questId):
         commandArgs.append("--defender")
