@@ -187,7 +187,7 @@ def handleSubmitSimulationErrors(code):
     elif(code == 7):
         message = "Wrong battlesWon. Please report this error to the simulator's developer."
     elif(code == 8):
-        message = "Simulations count beyond allowed range. Only values between 20,000 and 10,000,000 are allowed."
+        message = "Simulations count beyond allowed range. Only values between 50,000 and 10,000,000 are allowed."
     elif(code == 9):
         message = "timeTaken is invalid. Please try again."
     elif(code == 10):
